@@ -1,115 +1,139 @@
-# Bargoni — Shoes & Bags
+# Bargoni Shoes and Bags
 
-The shop website. Customers browse the collection, pick a size and colour, add to a cart,
-and place an order. The finished order arrives as a single formatted WhatsApp message with
-the items, sizes, delivery address and a reference number.
+The shop website for Bargoni, Zoo Road, Kano. Customers browse the collection,
+pick a size and colour, add pieces to a bag and place an order. The finished
+order arrives on WhatsApp as one formatted message with the items, sizes,
+delivery address and a reference number.
 
-Plain HTML, CSS and JavaScript. No build step, no dependencies, no server needed.
+Built with **Next.js 15** (App Router, TypeScript) and **Clerk** for customer
+accounts.
 
 ```
-index.html              the page
-assets/css/styles.css   all styling
-assets/js/data.js       ← your shop details and products (edit this one)
-assets/js/app.js        cart, checkout and order logic
-assets/img/             put product photos here
+src/lib/shop.ts            ← shop details and products (the file you edit)
+src/app/                   pages: home, shop, product, checkout, account, auth
+src/components/            header, cart, product cards, checkout form
+src/app/globals.css        the whole design
+public/logo-mark.png       the B-and-shoe mark, cut from your artwork
+public/products/           put product photos here
 ```
 
-## First thing to do: add your WhatsApp number
+## Running it
 
-Open `assets/js/data.js` and change this line:
-
-```js
-whatsapp: "2348000000000",
+```bash
+npm install
+npm run dev
 ```
 
-Use international format, digits only. For a Nigerian number, drop the leading `0` and
-put `234` in front — `0803 123 4567` becomes `2348031234567`.
+Then open http://localhost:3000. The shop works immediately — sign-in switches
+on once you add Clerk keys.
 
-Then fill in the rest of `SHOP`: email, phone, Instagram handle, store address, opening hours.
+## Clerk keys
 
-Until you do this, the order button points at a placeholder number and orders will go nowhere.
+Create an application at [dashboard.clerk.com](https://dashboard.clerk.com),
+copy `.env.example` to `.env.local`, and paste your two keys:
 
-## Adding or changing a product
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
+CLERK_SECRET_KEY=<your-clerk-secret-key>
+```
 
-Everything customers see comes from the `PRODUCTS` list in `assets/js/data.js`. Copy an
-existing block, change the values, save.
+Both keys start with a prefix Clerk shows you in the dashboard — the publishable
+one is safe in the browser, the secret one must never be committed. `.env.local`
+is already in `.gitignore`.
 
-```js
+Restart the dev server. You will then get Sign in / Account in the header, a
+protected `/account` page, and checkout prefilled with the customer's name and
+email.
+
+Without these keys the storefront still runs in full — ordering does not depend
+on sign-in.
+
+## Adding and editing products
+
+Everything customers see lives in `PRODUCTS` in `src/lib/shop.ts`. Copy a block,
+change the values, save.
+
+```ts
 {
-  id: "loafer-wine",          // unique, no spaces — used internally
-  name: "Wine Penny Loafer",
-  category: "shoes",          // "shoes" or "bags" — drives the filter buttons
-  price: 59000,               // number only, no commas or ₦
-  was: 68000,                 // optional — shows a struck-through old price
-  blurb: "Hand-stitched apron, leather sole",
-  detail: "Longer description shown in the product window.",
-  sizes: [40, 41, 42, 43, 44], // use [] for bags and one-size items
-  colors: ["Oxblood", "Black"],
-  tint: ["#6B2436", "#8E3348"], // two colours for the placeholder tile
-  tag: "New"                    // optional badge
+  slug: "gucci-horsebit-loafer",   // unique, lowercase, dashes — becomes the URL
+  name: "Horsebit Loafer",
+  brand: "Gucci",                  // must match a name in BRANDS
+  category: "shoes",               // "shoes" or "bags"
+  price: 690000,                   // number only, no commas or ₦
+  was: 750000,                     // optional, shows a struck-through old price
+  condition: "New",                // or "Pre-owned · excellent" / "· good"
+  blurb: "Polished leather, signature horsebit hardware",
+  detail: "The longer description on the product page.",
+  sizes: [40, 41, 42, 43, 44],     // [] for bags
+  colors: ["Black", "Brown"],
+  image: "/products/horsebit.jpg", // optional — see below
+  tag: "In stock now"              // optional badge
 }
 ```
 
-To remove a product, delete its block. To hide one temporarily, put `//` at the start of
-each of its lines.
+To stop selling something, delete its block.
 
-## Using real photos
+To add a house to the filter row, add its name to `BRANDS` at the top of the
+same file.
 
-Drop the image into `assets/img/`, then add an `image` line to that product:
+## Product photos
 
-```js
-image: "assets/img/wine-loafer.jpg",
-```
+This is the main thing still outstanding. Right now each piece shows a gold
+lettered plate instead of a photo.
 
-The photo replaces the coloured placeholder tile. Portrait shots at roughly 4:5 look best
-(for example 1200 × 1500 px). Keep each file under about 300 KB so the page stays fast —
-export as JPEG at 80% quality, or WebP.
+1. Put the photo in `public/products/`, for example
+   `public/products/horsebit-loafer.jpg`
+2. Add the `image` line to that product: `image: "/products/horsebit-loafer.jpg"`
 
-## Delivery fees
+Shoot or crop portrait at about **4:5** (1200 × 1500 px is ideal) on a plain
+dark or white background. Keep each file under roughly 400 KB — export JPEG at
+80% quality or WebP.
 
-Also in `assets/js/data.js`:
+Photograph your own stock. Do not copy images from Gucci, Hermès or any other
+brand's website: those are their copyright, and the photo would not show the
+actual piece the customer is buying.
 
-```js
+## Shop details, phones, delivery fees
+
+All in the `SHOP` object at the top of `src/lib/shop.ts` — address, opening
+hours, both phone numbers, the WhatsApp number that receives orders, and the
+delivery options with their fees:
+
+```ts
 delivery: [
-  { id: "pickup",  label: "Pick up in store",       fee: 0 },
-  { id: "lagos",   label: "Delivery within Lagos",  fee: 3000 },
-  { id: "nigeria", label: "Delivery outside Lagos", fee: 6000 }
+  { id: "pickup",  label: "Collect from the store",        fee: 0 },
+  { id: "kano",    label: "Delivery within Kano",          fee: 2500 },
+  { id: "nigeria", label: "Delivery elsewhere in Nigeria",  fee: 6500 }
 ]
 ```
 
-Add, remove or reprice these freely. The `pickup` entry is the one that hides the address
-field at checkout, so keep that `id` if you want that behaviour.
-
-## Viewing it on your computer
-
-Open `index.html` in a browser. That is all — there is nothing to install or run.
+Keep the `pickup` id if you want the address field to disappear for collections.
 
 ## Putting it online
 
-**Vercel** — go to vercel.com, New Project, import this repository, deploy. Leave every
-build setting empty; it is a static site. Every push to `main` redeploys automatically.
+**Vercel** is the straightforward option:
 
-**GitHub Pages** — in this repository: Settings → Pages → Source: "Deploy from a branch",
-branch `main`, folder `/ (root)`, Save. The site appears at
-`https://devmskhan.github.io/bargonishoes-bags/` within a minute or two.
+1. Go to vercel.com and import this repository.
+2. Framework preset is detected as Next.js — leave the build settings alone.
+3. Add the two Clerk environment variables in Project Settings → Environment
+   Variables (use your **production** Clerk keys here, not the test pair).
+4. Deploy. Every push to `main` redeploys.
 
-Either host is free at this size. A custom domain (bargoni.com and the like) can be pointed
-at either one from the same settings page.
+A custom domain is added from the same project settings.
 
 ## Taking card payments
 
-Right now orders come through WhatsApp, and you collect payment by transfer, cash or POS on
-delivery. That needs no account and no fees.
-
-To take card payments on the site instead, you need a **Paystack** or **Flutterwave**
-merchant account. Once you have one, the checkout button in `assets/js/app.js` is the single
-place that changes — it currently builds a WhatsApp message, and would instead open the
-payment provider's checkout with the same total. Say the word and it can be wired up.
+Orders currently settle by transfer, cash or POS once you have confirmed on
+WhatsApp. Cards need a **Paystack** or **Flutterwave** merchant account. Once
+you have one, the `place()` function in `src/components/CheckoutForm.tsx` is the
+only place that changes — it builds the WhatsApp message today and would open
+the provider's checkout with the same total instead.
 
 ## Notes
 
-- The cart is kept in the visitor's own browser, so it survives a page refresh. It is not
-  sent anywhere until they press the order button.
-- The page follows the visitor's light or dark system setting.
-- Prices are written in the code, not in a database. That is deliberate at this size: one
-  file to edit, nothing to break.
+- The bag is kept in the visitor's own browser, so it survives a refresh. It is
+  not sent anywhere until the order button is pressed.
+- The site is a single deliberate dark theme, built around the gold house mark.
+- Prices live in the code rather than a database. That is intentional at this
+  size: one file to edit and nothing to break. A real stock system with live
+  quantities would need a database — worth doing once the range grows.
