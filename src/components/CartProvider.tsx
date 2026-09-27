@@ -8,7 +8,7 @@ import {
   useMemo,
   useState
 } from "react";
-import { PRODUCTS, type Product } from "@/lib/shop";
+import type { StoredProduct } from "@/lib/catalogue";
 
 export type CartLine = {
   slug: string;
@@ -18,6 +18,7 @@ export type CartLine = {
 };
 
 type CartState = {
+  products: StoredProduct[];
   lines: CartLine[];
   count: number;
   open: boolean;
@@ -34,10 +35,14 @@ const STORE_KEY = "bargoni.enquiry.v1";
 const CartContext = createContext<CartState | null>(null);
 
 export const lineKey = (l: CartLine) => `${l.slug}|${l.size}|${l.color}`;
-export const productOf = (slug: string): Product | undefined =>
-  PRODUCTS.find((p) => p.slug === slug);
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
+export function CartProvider({
+  products,
+  children
+}: {
+  products: StoredProduct[];
+  children: React.ReactNode;
+}) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [open, setOpen] = useState(false);
   const [ready, setReady] = useState(false);
@@ -50,13 +55,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (raw) {
         const parsed = JSON.parse(raw) as CartLine[];
         if (Array.isArray(parsed)) {
-          setLines(parsed.filter((l) => productOf(l.slug)));
+          setLines(parsed.filter((l) => products.some((p) => p.slug === l.slug)));
         }
       }
     } catch {
       /* private window or storage blocked — the list still works for this visit */
     }
     setReady(true);
+    /* products is stable for the life of the page render */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -85,7 +92,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [toast]);
 
   const add = useCallback((slug: string, size: string, color: string) => {
-    const product = productOf(slug);
+    const product = products.find((p) => p.slug === slug);
     if (!product) return;
     setLines((prev) => {
       const candidate: CartLine = { slug, size, color, qty: 1 };
@@ -97,7 +104,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [...prev, candidate];
     });
     setToast(`${product.brand} ${product.name} added`);
-  }, []);
+  }, [products]);
 
   const setQty = useCallback((key: string, delta: number) => {
     setLines((prev) =>
@@ -116,6 +123,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<CartState>(() => {
     const count = lines.reduce((n, l) => n + l.qty, 0);
     return {
+      products,
       lines,
       count,
       open,
@@ -127,7 +135,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setOpen,
       toast
     };
-  }, [lines, open, ready, add, setQty, remove, clear, toast]);
+  }, [products, lines, open, ready, add, setQty, remove, clear, toast]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
@@ -136,4 +144,13 @@ export function useCart() {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error("useCart must be used inside <CartProvider>");
   return ctx;
+}
+
+/** Look a cart line's product up in the catalogue the provider was given. */
+export function useProductOf() {
+  const { products } = useCart();
+  return useCallback(
+    (slug: string) => products.find((p) => p.slug === slug),
+    [products]
+  );
 }

@@ -5,7 +5,8 @@ import { CartProvider } from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { SHOP, fullAddress } from "@/lib/shop";
+import { SHOP, fullAddress, activeCategories } from "@/lib/shop";
+import { getVisibleCatalogue } from "@/lib/catalogue";
 import "./globals.css";
 
 const display = Bodoni_Moda({
@@ -42,16 +43,18 @@ export const viewport: Viewport = {
   viewportFit: "cover"
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
   const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  const products = await getVisibleCatalogue();
+  const categories = activeCategories(products);
 
   const shell = (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
-        <CartProvider>
-          <Header clerkEnabled={clerkEnabled} />
+        <CartProvider products={products}>
+          <Header clerkEnabled={clerkEnabled} categories={categories} />
           <main>{children}</main>
           <Footer />
           <CartDrawer />

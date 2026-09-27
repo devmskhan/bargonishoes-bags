@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SHOP, fullAddress, waLink } from "@/lib/shop";
+import { isAdmin } from "@/lib/admin";
 
 export const metadata = { title: "Your account" };
 export const dynamic = "force-dynamic";
@@ -28,6 +29,7 @@ export default async function AccountPage() {
 
   const { currentUser } = await import("@clerk/nextjs/server");
   const user = await currentUser();
+  const admin = await isAdmin();
 
   const name = [user?.firstName, user?.lastName].filter(Boolean).join(" ");
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
@@ -44,6 +46,21 @@ export default async function AccountPage() {
           </p>
         </div>
       </div>
+
+      {admin ? (
+        <div className="panel" style={{ marginBottom: 24 }}>
+          <h3>Manage the collection</h3>
+          <p style={{ marginTop: 8 }}>
+            Add, edit, hide or remove pieces. Changes show on the site
+            immediately.
+          </p>
+          <div style={{ marginTop: 20 }}>
+            <Link href="/admin" className="btn btn-gold">
+              Open the admin dashboard
+            </Link>
+          </div>
+        </div>
+      ) : null}
 
       <div className="duo">
         <div className="panel">

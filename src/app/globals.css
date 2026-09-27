@@ -1020,3 +1020,155 @@ body.is-locked .header { backdrop-filter: none; }
   }
   .drawer, .scrim { transform: none !important; opacity: 1 !important; }
 }
+
+
+/* ---------- admin ---------- */
+
+.admin { padding-block: clamp(28px, 4vw, 48px); }
+
+.admin-counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+
+.admin-counts div {
+  background: var(--panel);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-counts .k {
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.admin-counts .v {
+  font-family: var(--display);
+  font-size: 26px;
+  color: var(--gold-bright);
+}
+
+.admin-note {
+  padding: 12px 16px;
+  border: 1px solid var(--line-warm);
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.admin-note.ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, transparent); }
+.admin-note.bad { color: #E9857F; border-color: #5C3330; }
+
+.banner-warn {
+  padding: 14px 18px;
+  border: 1px solid var(--line-warm);
+  background: var(--gold-veil);
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 22px;
+  line-height: 1.55;
+}
+
+.banner-warn code {
+  color: var(--gold-bright);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 13px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 420px) 1fr;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+
+.admin-form { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 92px; }
+.admin-form h3 { font-size: 22px; }
+.admin-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+
+.upload-row { display: grid; grid-template-columns: 92px 1fr; gap: 14px; align-items: start; }
+
+.upload-preview {
+  width: 92px;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--line-warm);
+  background: var(--panel-2);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.upload-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.upload-empty {
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.upload-controls { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.upload-controls input[type="file"] { font-size: 13px; color: var(--muted); max-width: 100%; }
+.upload-controls input[type="file"]::file-selector-button {
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line-warm);
+  padding: 8px 14px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.upload-controls input[type="file"]::file-selector-button:hover { border-color: var(--gold); color: var(--gold-bright); }
+
+.admin-list { display: flex; flex-direction: column; gap: 10px; }
+
+.admin-row {
+  display: grid;
+  grid-template-columns: 62px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+}
+
+.admin-row.is-hidden { opacity: .55; }
+.admin-row.is-hidden .line-name { text-decoration: line-through; }
+
+.admin-thumb {
+  width: 62px;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.admin-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.admin-meta { min-width: 0; }
+.admin-row-actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.admin-row-actions .chip { padding: 6px 12px; font-size: 12px; min-width: 0; }
+.chip.danger { border-color: #7A3B36; color: #E9857F; }
+.chip.danger:hover { border-color: #E9857F; }
+.chip:disabled { opacity: .45; cursor: not-allowed; }
+
+@media (max-width: 1000px) {
+  .admin-grid { grid-template-columns: 1fr; }
+  .admin-form { position: static; }
+}
+
+@media (max-width: 560px) {
+  .admin-row { grid-template-columns: 52px 1fr; }
+  .admin-thumb { width: 52px; }
+  .admin-row-actions { grid-column: 1 / -1; justify-content: flex-start; }
+}

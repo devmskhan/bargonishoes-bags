@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SHOP, waLink } from "@/lib/shop";
-import { useCart, lineKey, productOf } from "./CartProvider";
+import { useCart, lineKey, useProductOf } from "./CartProvider";
 import ProductMedia from "./ProductMedia";
 
 type Sent = { text: string; url: string; ref: string };
@@ -16,6 +16,7 @@ export default function EnquiryForm({
   defaultEmail?: string;
 }) {
   const { lines, count, ready, clear } = useCart();
+  const productOf = useProductOf();
 
   const [name, setName] = useState(defaultName);
   const [email, setEmail] = useState(defaultEmail);

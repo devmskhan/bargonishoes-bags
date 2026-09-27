@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PRODUCTS, SHOP, getProduct, categoryLabel, waLink } from "@/lib/shop";
+import { SHOP, getProduct, categoryLabel, waLink } from "@/lib/shop";
+import { getVisibleCatalogue } from "@/lib/catalogue";
 import ProductMedia from "@/components/ProductMedia";
 import AddToBag from "@/components/AddToBag";
 
-export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params
@@ -15,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = getProduct(await getVisibleCatalogue(), slug);
   if (!product) return { title: "Not found" };
   return {
     title: `${product.brand} ${product.name}`,
@@ -29,7 +28,7 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = getProduct(await getVisibleCatalogue(), slug);
   if (!product) notFound();
 
   const enquiry = waLink(

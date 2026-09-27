@@ -30,7 +30,7 @@ export const SHOP = {
     country: "Nigeria"
   },
 
-  hours: "Monday – Saturday, 9:00am – 8:00pm",
+  hours: "Monday – Saturday, 11:00am – 9:00pm",
 
   /* How the customer wants to receive it. No fees shown — price and
      delivery are agreed on WhatsApp. */
@@ -73,7 +73,7 @@ export type Product = {
   tag?: string;
 };
 
-export const PRODUCTS: Product[] = [
+export const SEED_PRODUCTS: Product[] = [
   /* ---------------- Hermès ---------------- */
   {
     slug: "hermes-izmir-black",
@@ -389,18 +389,28 @@ export const waLink = (text?: string) =>
   `https://wa.me/${SHOP.whatsapp}` +
   (text ? `?text=${encodeURIComponent(text)}` : "");
 
-export const getProduct = (slug: string) =>
-  PRODUCTS.find((p) => p.slug === slug);
+export const getProduct = <T extends Product>(items: T[], slug: string) =>
+  items.find((p) => p.slug === slug);
 
 /* Categories that actually have stock, so an empty filter never shows. */
-export const activeCategories = (): Category[] =>
+export const activeCategories = (items: Product[]): Category[] =>
   (["shoes", "bags"] as Category[]).filter((c) =>
-    PRODUCTS.some((p) => p.category === c)
+    items.some((p) => p.category === c)
   );
 
-/* Houses that actually have stock, in the BRANDS order above. */
-export const activeBrands = (): string[] =>
-  BRANDS.filter((b) => PRODUCTS.some((p) => p.brand === b));
+/* Houses that actually have stock, in the BRANDS order above, plus any
+   house the admin has added that is not in that list. */
+export const activeBrands = (items: Product[]): string[] => {
+  const listed = BRANDS.filter((b) => items.some((p) => p.brand === b));
+  const extra = Array.from(
+    new Set(
+      items
+        .map((p) => p.brand)
+        .filter((b) => b && !(BRANDS as readonly string[]).includes(b))
+    )
+  ).sort();
+  return [...listed, ...extra];
+};
 
 export const categoryLabel = (c: Category) =>
   c === "shoes" ? "Shoes" : "Bags";

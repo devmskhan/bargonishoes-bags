@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { activeBrands, type Category } from "@/lib/shop";
+import { getVisibleCatalogue } from "@/lib/catalogue";
 import ShopBrowser from "@/components/ShopBrowser";
 
 export const metadata: Metadata = {
@@ -8,17 +9,20 @@ export const metadata: Metadata = {
     "Designer shoes and bags in stock at Bargoni, Zoo Road, Kano — Hermès, Dior, Louis Vuitton, Loro Piana, Saint Laurent and more."
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function ShopPage({
   searchParams
 }: {
   searchParams: Promise<{ c?: string; b?: string }>;
 }) {
   const sp = await searchParams;
+  const products = await getVisibleCatalogue();
 
   const category: Category | "all" =
     sp.c === "shoes" || sp.c === "bags" ? sp.c : "all";
 
-  const brand = sp.b && activeBrands().includes(sp.b) ? sp.b : "all";
+  const brand = sp.b && activeBrands(products).includes(sp.b) ? sp.b : "all";
 
   return (
     <section className="section wrap">
@@ -33,7 +37,11 @@ export default async function ShopPage({
         </div>
       </div>
 
-      <ShopBrowser initialCategory={category} initialBrand={brand} />
+      <ShopBrowser
+        products={products}
+        initialCategory={category}
+        initialBrand={brand}
+      />
     </section>
   );
 }

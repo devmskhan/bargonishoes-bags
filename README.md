@@ -52,10 +52,78 @@ email.
 Without these keys the storefront still runs in full — ordering does not depend
 on sign-in.
 
-## Adding and editing products
+## The admin dashboard
 
-Everything customers see lives in `PRODUCTS` in `src/lib/shop.ts`. Copy a block,
-change the values, save.
+`/admin` lets one person add, edit, hide and remove pieces without touching the
+code. Changes appear on the site immediately.
+
+**Hiding vs removing.** Hiding takes a piece off the site but keeps its photo
+and description, so you can put it back when it is in stock again. Removing
+deletes it. For something you have merely sold out of, hide it.
+
+### Setting it up
+
+It needs two things: Clerk (who may sign in) and Vercel Blob (where products
+and photos are stored). Both have free tiers that are ample at this size.
+
+**1. Clerk — the admin account**
+
+1. Create an application at [dashboard.clerk.com](https://dashboard.clerk.com).
+2. Under **Configure → Email, phone, username**, turn on Email and Password,
+   and turn **off** public sign-ups if you do not want customer accounts.
+3. Go to **Users → Create user** and make the admin: their email address, and a
+   password you choose there. Clerk stores it hashed — it is never in this
+   repository, and it should never be sent to anyone in a message.
+4. Copy the two API keys from **API Keys**.
+
+**2. Vercel Blob — the storage**
+
+In your Vercel project: **Storage → Create → Blob**, then connect it to this
+project. Vercel sets `BLOB_READ_WRITE_TOKEN` on the deployment for you.
+
+**3. The environment variables**
+
+In Vercel, **Project Settings → Environment Variables**:
+
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY   from Clerk
+CLERK_SECRET_KEY                    from Clerk
+ADMIN_EMAIL                         the admin's email, exactly as in Clerk
+BLOB_READ_WRITE_TOKEN               set for you when you connect Blob
+```
+
+Redeploy. Sign in at `/sign-in`, then go to `/admin`.
+
+### Who can get in
+
+Only the address in `ADMIN_EMAIL`. Anyone else who signs in — including a
+customer with their own account — is refused. The check runs on the server, on
+the page and again on every save, so it is not something a person can get past
+by fiddling with the browser.
+
+To hand over to somebody else, change `ADMIN_EMAIL` and create that person in
+Clerk. To change the password, do it in Clerk; nothing here needs editing.
+
+**Never put the password in this repository.** It is public — anything
+committed here can be read by anyone. `ADMIN_EMAIL` is only an address, which is
+why it is safe as a variable; the password lives in Clerk alone.
+
+### Where the products actually live
+
+The first time the site runs with a Blob token, the pieces in `src/lib/shop.ts`
+are copied into a `catalogue.json` file in Blob. From then on **Blob is the
+source of truth** and editing `shop.ts` changes nothing on the live site — use
+the dashboard instead.
+
+With no Blob token, every page falls back to `src/lib/shop.ts`, so the shop
+still works and only saving is unavailable. That is what you are seeing if the
+dashboard shows a warning strip at the top.
+
+## Adding and editing products (in the code)
+
+Once the dashboard is set up this is no longer how you add stock — use `/admin`.
+These products in `src/lib/shop.ts` are the **seed**: what the site shows before
+Blob is connected, and what gets copied in the first time it is.
 
 ```ts
 {

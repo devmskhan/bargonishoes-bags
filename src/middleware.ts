@@ -1,7 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtected = createRouteMatcher(["/account(.*)"]);
+const isProtected = createRouteMatcher([
+  "/account(.*)",
+  "/admin(.*)",
+  "/api/admin(.*)"
+]);
 
 const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 

@@ -2,12 +2,17 @@
 
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { SHOP, activeCategories, categoryLabel } from "@/lib/shop";
+import { SHOP, categoryLabel, type Category } from "@/lib/shop";
 import { useCart } from "./CartProvider";
 
-export default function Header({ clerkEnabled }: { clerkEnabled: boolean }) {
+export default function Header({
+  clerkEnabled,
+  categories
+}: {
+  clerkEnabled: boolean;
+  categories: Category[];
+}) {
   const { count, setOpen } = useCart();
-  const categories = activeCategories();
 
   return (
     <header className="header">

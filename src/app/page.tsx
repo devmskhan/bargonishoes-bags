@@ -1,18 +1,21 @@
 import Link from "next/link";
 import {
-  PRODUCTS,
   SHOP,
   activeBrands,
   activeCategories,
   fullAddress,
   waLink
 } from "@/lib/shop";
+import { getVisibleCatalogue } from "@/lib/catalogue";
 import ProductCard from "@/components/ProductCard";
 
-export default function HomePage() {
-  const featured = PRODUCTS.slice(0, 8);
-  const houses = activeBrands();
-  const hasBags = activeCategories().includes("bags");
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const products = await getVisibleCatalogue();
+  const featured = products.slice(0, 8);
+  const houses = activeBrands(products);
+  const hasBags = activeCategories(products).includes("bags");
 
   return (
     <>

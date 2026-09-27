@@ -2,20 +2,22 @@
 
 import { useMemo, useState } from "react";
 import {
-  PRODUCTS,
   activeBrands,
   activeCategories,
   categoryLabel,
   type Category
 } from "@/lib/shop";
+import type { StoredProduct } from "@/lib/catalogue";
 import ProductCard from "./ProductCard";
 
 type CategoryFilter = Category | "all";
 
 export default function ShopBrowser({
+  products,
   initialCategory = "all",
   initialBrand = "all"
 }: {
+  products: StoredProduct[];
   initialCategory?: CategoryFilter;
   initialBrand?: string;
 }) {
@@ -23,17 +25,17 @@ export default function ShopBrowser({
   const [brand, setBrand] = useState<string>(initialBrand);
 
   /* only show filters that have stock behind them */
-  const categories = useMemo(activeCategories, []);
-  const brands = useMemo(activeBrands, []);
+  const categories = useMemo(() => activeCategories(products), [products]);
+  const brands = useMemo(() => activeBrands(products), [products]);
 
   const items = useMemo(
     () =>
-      PRODUCTS.filter(
+      products.filter(
         (p) =>
           (category === "all" || p.category === category) &&
           (brand === "all" || p.brand === brand)
       ),
-    [category, brand]
+    [products, category, brand]
   );
 
   return (

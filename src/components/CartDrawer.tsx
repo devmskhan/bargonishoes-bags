@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { useCart, lineKey, productOf } from "./CartProvider";
+import { useCart, lineKey, useProductOf } from "./CartProvider";
 import ProductMedia from "./ProductMedia";
 
 export default function CartDrawer() {
   const { open, setOpen, lines, count, setQty, remove, toast } = useCart();
+  const productOf = useProductOf();
 
   useEffect(() => {
     if (!open) return;
