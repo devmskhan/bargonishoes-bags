@@ -1,10 +1,18 @@
 import Link from "next/link";
-import { PRODUCTS, SHOP, activeBrands, fullAddress, waLink } from "@/lib/shop";
+import {
+  PRODUCTS,
+  SHOP,
+  activeBrands,
+  activeCategories,
+  fullAddress,
+  waLink
+} from "@/lib/shop";
 import ProductCard from "@/components/ProductCard";
 
 export default function HomePage() {
   const featured = PRODUCTS.slice(0, 8);
   const houses = activeBrands();
+  const hasBags = activeCategories().includes("bags");
 
   return (
     <>
@@ -25,14 +33,11 @@ export default function HomePage() {
               <Link href="/shop" className="btn btn-gold">
                 View the collection
               </Link>
-              <a
-                href={waLink(`Hello ${SHOP.name}, I would like to ask about a piece.`)}
-                className="btn btn-line"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Ask on WhatsApp
-              </a>
+              {hasBags ? (
+                <Link href="/shop?c=bags" className="btn btn-line">
+                  Shop the bags
+                </Link>
+              ) : null}
             </div>
           </div>
           <div className="hero-mark">
@@ -73,6 +78,24 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {hasBags ? (
+        <section className="banner" aria-labelledby="bags-banner-heading">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="banner-img" src="/bags-banner.jpg" alt="" />
+          <div className="wrap banner-inner">
+            <span className="eyebrow">Handbags</span>
+            <h2 id="bags-banner-heading">The bags, in one place.</h2>
+            <p>
+              Gucci, Prada, Valentino, Polène and more — top-handle, shoulder
+              and crossbody, on the shelf at Zoo Road.
+            </p>
+            <Link href="/shop?c=bags" className="btn btn-gold">
+              View the bags collection
+            </Link>
+          </div>
+        </section>
+      ) : null}
 
       <div className="houses">
         <div className="wrap assure">

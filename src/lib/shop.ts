@@ -45,9 +45,14 @@ export const SHOP = {
 export const BRANDS = [
   "Hermès",
   "Dior",
+  "Gucci",
+  "Prada",
+  "Valentino",
   "Louis Vuitton",
-  "Loro Piana",
   "Saint Laurent",
+  "Loro Piana",
+  "Polène",
+  "Guess",
   "Timberland"
 ] as const;
 
@@ -296,25 +301,83 @@ export const PRODUCTS: Product[] = [
     sizes: [40, 41, 42, 43, 44, 45],
     colors: ["Black"],
     image: "/products/timberland-canvas-slip-on.jpg"
-  }
+  },
 
-  /* ---------------- Bags ----------------
-     Add bags here once you have photographs of them. Use
-     category: "bags", leave `sizes` as [], and the Bags filter
-     appears on the site by itself. Example:
-
-  ,{
-    slug: "hermes-birkin-30",
-    name: "Birkin 30",
-    brand: "Hermès",
+  /* ---------------- Bags ---------------- */
+  {
+    slug: "gucci-marmont-camera-bag",
+    name: "GG Marmont Camera Bag",
+    brand: "Gucci",
     category: "bags",
-    blurb: "Togo leather, palladium hardware",
-    detail: "Longer description here.",
+    blurb: "Matelassé chevron leather, antique gold GG",
+    detail:
+      "The chevron-quilted camera bag with the double-G at the front and a heavy chain-and-leather strap. Zip top, one flat pocket inside. Wears short on the shoulder or long across the body.",
     sizes: [],
-    colors: ["Gold", "Noir"],
-    image: "/products/hermes-birkin-30.jpg"
+    colors: ["Black"],
+    image: "/products/gucci-marmont-camera-bag.jpg",
+    tag: "Bestseller"
+  },
+  {
+    slug: "gucci-blondie-shoulder-bag",
+    name: "Blondie Shoulder Bag",
+    brand: "Gucci",
+    category: "bags",
+    blurb: "Smooth leather, round interlocking G",
+    detail:
+      "A soft rounded shoulder bag in smooth leather with the large round interlocking G set into the front flap, and a chain-and-leather shoulder strap.",
+    sizes: [],
+    colors: ["Pink"],
+    image: "/products/gucci-blondie-shoulder-bag.jpg"
+  },
+  {
+    slug: "prada-cahier-shoulder-bag",
+    name: "Cahier Shoulder Bag",
+    brand: "Prada",
+    category: "bags",
+    blurb: "Book-shaped body, metal corners and clasp",
+    detail:
+      "Shaped like a closed book, in two leathers with polished metal corners and the bar clasp across the front. Chain strap, and the lettering in metal on the flap.",
+    sizes: [],
+    colors: ["Grey / Black"],
+    image: "/products/prada-cahier-shoulder-bag.jpg"
+  },
+  {
+    slug: "valentino-vlogo-top-handle",
+    name: "VLogo Top-Handle Bag",
+    brand: "Valentino",
+    category: "bags",
+    blurb: "Grained calfskin, gold hardware, chain strap",
+    detail:
+      "A structured top-handle bag in grained calfskin, with the VLogo worked into the flap in matching leather and brushed gold hardware. Comes with a detachable leather-and-chain strap.",
+    sizes: [],
+    colors: ["Forest green"],
+    image: "/products/valentino-vlogo-top-handle.jpg",
+    tag: "One only"
+  },
+  {
+    slug: "polene-leather-top-handle",
+    name: "Leather Top-Handle Bag",
+    brand: "Polène",
+    category: "bags",
+    blurb: "Grained leather, folded flap, no visible logo",
+    detail:
+      "Quiet, sculptural, and French. Grained leather folded over itself into a soft flap with pleated side panels and a single slim top handle. The only marking is a small plate at the closure.",
+    sizes: [],
+    colors: ["Chalk"],
+    image: "/products/polene-leather-top-handle.jpg"
+  },
+  {
+    slug: "guess-logo-handbag",
+    name: "Logo Jacquard Handbag",
+    brand: "Guess",
+    category: "bags",
+    blurb: "Logo jacquard, leather handles, front zip",
+    detail:
+      "A roomy day bag in logo jacquard with contrasting leather handles, a zip pocket across the front and gold hardware. The easiest one here to carry every day.",
+    sizes: [],
+    colors: ["Beige / Brown"],
+    image: "/products/guess-logo-handbag.jpg"
   }
-  */
 ];
 
 /* ---------- small helpers used across the app ---------- */
