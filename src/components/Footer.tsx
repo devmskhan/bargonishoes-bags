@@ -70,8 +70,11 @@ export default function Footer() {
           <span>
             &copy; {new Date().getFullYear()} {SHOP.legalName}. {fullAddress()}.
           </span>
-          <span>
+          <span className="footer-links">
             <Link href="/shop">Collection</Link>
+            <Link href="/admin" className="staff-link">
+              Admin
+            </Link>
           </span>
         </div>
       </div>

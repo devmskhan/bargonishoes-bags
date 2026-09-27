@@ -92,7 +92,19 @@ ADMIN_EMAIL                         the admin's email, exactly as in Clerk
 BLOB_READ_WRITE_TOKEN               set for you when you connect Blob
 ```
 
-Redeploy. Sign in at `/sign-in`, then go to `/admin`.
+Redeploy.
+
+### Getting to the dashboard
+
+Three ways in, all leading to the same place:
+
+- **Admin** in the footer of every page — visible to everyone, but it refuses
+  anyone who is not the admin, so there is nothing to hide.
+- **Dashboard** in the top bar, which appears only once the admin is signed in.
+- Typing `/admin` after the site address.
+
+Signed out, the first two land on a sign-in prompt. Sign in with the admin email
+and password you created in Clerk, and you are through.
 
 ### Who can get in
 

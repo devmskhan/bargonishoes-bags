@@ -58,6 +58,34 @@ img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: none; padding: 0; }
 
+/* anything that acts like a control shows the hand, including the ones
+   built on elements that do not get it by default */
+button,
+a[href],
+label[for],
+select,
+summary,
+[role="button"],
+.btn,
+.chip,
+.filter,
+.house,
+.pcard,
+.cart-open,
+.x,
+.drop,
+.auth-link,
+input[type="file"],
+input[type="file"]::file-selector-button,
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+}
+
+button:disabled,
+.btn:disabled,
+.chip:disabled { cursor: not-allowed; }
+
 :focus-visible {
   outline: 1px solid var(--gold);
   outline-offset: 3px;
@@ -1172,3 +1200,13 @@ body.is-locked .header { backdrop-filter: none; }
   .admin-thumb { width: 52px; }
   .admin-row-actions { grid-column: 1 / -1; justify-content: flex-start; }
 }
+
+/* admin entry points */
+
+.auth-link.is-admin { color: var(--gold); }
+.auth-link.is-admin:hover { color: var(--gold-bright); }
+
+.footer-links { display: inline-flex; gap: 18px; align-items: center; }
+
+.staff-link { color: var(--faint); }
+.staff-link:hover { color: var(--gold-bright); }

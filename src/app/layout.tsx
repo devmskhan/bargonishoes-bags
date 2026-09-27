@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SHOP, fullAddress, activeCategories } from "@/lib/shop";
 import { getVisibleCatalogue } from "@/lib/catalogue";
+import { isAdmin } from "@/lib/admin";
 import "./globals.css";
 
 const display = Bodoni_Moda({
@@ -49,12 +50,17 @@ export default async function RootLayout({
   const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
   const products = await getVisibleCatalogue();
   const categories = activeCategories(products);
+  const admin = await isAdmin();
 
   const shell = (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
         <CartProvider products={products}>
-          <Header clerkEnabled={clerkEnabled} categories={categories} />
+          <Header
+            clerkEnabled={clerkEnabled}
+            categories={categories}
+            isAdmin={admin}
+          />
           <main>{children}</main>
           <Footer />
           <CartDrawer />

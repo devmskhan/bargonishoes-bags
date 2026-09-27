@@ -7,10 +7,12 @@ import { useCart } from "./CartProvider";
 
 export default function Header({
   clerkEnabled,
-  categories
+  categories,
+  isAdmin = false
 }: {
   clerkEnabled: boolean;
   categories: Category[];
+  isAdmin?: boolean;
 }) {
   const { count, setOpen } = useCart();
 
@@ -47,6 +49,11 @@ export default function Header({
                 </Link>
               </SignedOut>
               <SignedIn>
+                {isAdmin ? (
+                  <Link href="/admin" className="auth-link is-admin">
+                    Dashboard
+                  </Link>
+                ) : null}
                 <Link href="/account" className="auth-link">
                   Account
                 </Link>
