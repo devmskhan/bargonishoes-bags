@@ -23,7 +23,17 @@ export type StoredProduct = Product & {
 
 const FILE = "catalogue.json";
 
-export const blobConfigured = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+/* Pasting the token with the surrounding quotes from a .env snippet is an
+   easy mistake, so strip them rather than failing on it. The cleaned value
+   is passed to the SDK explicitly instead of letting it read the raw env. */
+export function blobToken(): string {
+  return (process.env.BLOB_READ_WRITE_TOKEN ?? "")
+    .trim()
+    .replace(/^["']|["']$/g, "")
+    .trim();
+}
+
+export const blobConfigured = () => blobToken().length > 0;
 
 const fromSeed = (): StoredProduct[] =>
   SEED_PRODUCTS.map((p) => ({ ...p, id: p.slug }));
@@ -33,7 +43,7 @@ export async function getCatalogue(): Promise<StoredProduct[]> {
   if (!blobConfigured()) return fromSeed();
 
   try {
-    const { blobs } = await list({ prefix: FILE, limit: 100 });
+    const { blobs } = await list({ prefix: FILE, limit: 100, token: blobToken() });
     const hit = blobs.find((b) => b.pathname === FILE);
 
     if (!hit) {
@@ -69,16 +79,17 @@ export async function getVisibleCatalogue(): Promise<StoredProduct[]> {
    older SDK simply ignores the extra key. */
 type PutOptions = Parameters<typeof put>[2];
 
-const catalogueOptions = {
-  access: "public",
-  contentType: "application/json",
-  addRandomSuffix: false,
-  allowOverwrite: true,
-  cacheControlMaxAge: 0
-} as unknown as PutOptions;
-
 export async function saveCatalogue(items: StoredProduct[]): Promise<void> {
-  await put(FILE, JSON.stringify(items, null, 2), catalogueOptions);
+  const options = {
+    access: "public",
+    contentType: "application/json",
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    cacheControlMaxAge: 0,
+    token: blobToken()
+  } as unknown as PutOptions;
+
+  await put(FILE, JSON.stringify(items, null, 2), options);
 }
 
 /* ---------- helpers used by the API routes ---------- */

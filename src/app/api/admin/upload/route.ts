@@ -1,6 +1,6 @@
 import { put } from "@vercel/blob";
 import { isAdmin, denied } from "@/lib/admin";
-import { blobConfigured, slugify } from "@/lib/catalogue";
+import { blobConfigured, blobToken, slugify } from "@/lib/catalogue";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +45,8 @@ export async function POST(req: Request) {
 
   const blob = await put(`products/${Date.now()}-${base}.${ext}`, file, {
     access: "public",
-    contentType: file.type
+    contentType: file.type,
+    token: blobToken()
   });
 
   return Response.json({ url: blob.url });

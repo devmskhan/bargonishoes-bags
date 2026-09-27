@@ -201,9 +201,16 @@ export default function AdminDashboard({
 
       {!storageReady ? (
         <p className="banner-warn">
-          Storage is not connected yet, so nothing you do here will save. Add the
-          <code> BLOB_READ_WRITE_TOKEN</code> environment variable in Vercel and
-          redeploy. Until then this page shows the pieces built into the code.
+          Storage is not connected yet, so nothing you do here will save. This
+          deployment cannot see <code>BLOB_READ_WRITE_TOKEN</code>. Connect the
+          Blob store to this project in Vercel, tick Production, then redeploy —
+          adding a variable does not change a deployment that is already running.
+          {" "}
+          <a href="/api/admin/health" target="_blank" rel="noopener noreferrer">
+            Open the setup report
+          </a>{" "}
+          to see exactly what this deployment can see. Until then the page shows
+          the pieces built into the code.
         </p>
       ) : null}
 

@@ -106,6 +106,27 @@ Three ways in, all leading to the same place:
 Signed out, the first two land on a sign-in prompt. Sign in with the admin email
 and password you created in Clerk, and you are through.
 
+### When the dashboard says storage is not connected
+
+Open `/api/admin/health` while signed in as the admin. It reports what that
+deployment can actually see — no secret values, just whether each one arrived —
+which turns guesswork into a fact.
+
+The usual causes, in the order they catch people:
+
+1. **The deployment predates the variable.** Environment variables are read
+   when a deployment is built. Adding one changes nothing about the deployment
+   already serving your site. Deployments → latest → ⋯ → **Redeploy**.
+2. **The Blob store is not connected to this project.** Creating a store is not
+   enough; it has to be attached to the project, which is what makes Vercel
+   inject `BLOB_READ_WRITE_TOKEN` into it.
+3. **The variable is not ticked for Production.** Each one has separate
+   Production / Preview / Development checkboxes.
+4. **The quotes came along.** In a `.env` file the value is written
+   `BLOB_READ_WRITE_TOKEN="vercel_blob_rw_..."`. In Vercel's form the value is
+   just `vercel_blob_rw_...` — no quotes, no name, no equals sign. The app
+   strips stray quotes anyway, and the report says if it had to.
+
 ### Who can get in
 
 Only the address in `ADMIN_EMAIL`. Anyone else who signs in — including a
