@@ -63,14 +63,22 @@ export async function getVisibleCatalogue(): Promise<StoredProduct[]> {
   return all.filter((p) => !p.hidden);
 }
 
+/* Older @vercel/blob overwrites a fixed pathname by default and has no
+   `allowOverwrite` option; newer versions require it and refuse without.
+   Passing it through a loose cast satisfies the compiler on both, and the
+   older SDK simply ignores the extra key. */
+type PutOptions = Parameters<typeof put>[2];
+
+const catalogueOptions = {
+  access: "public",
+  contentType: "application/json",
+  addRandomSuffix: false,
+  allowOverwrite: true,
+  cacheControlMaxAge: 0
+} as unknown as PutOptions;
+
 export async function saveCatalogue(items: StoredProduct[]): Promise<void> {
-  await put(FILE, JSON.stringify(items, null, 2), {
-    access: "public",
-    contentType: "application/json",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    cacheControlMaxAge: 0
-  });
+  await put(FILE, JSON.stringify(items, null, 2), catalogueOptions);
 }
 
 /* ---------- helpers used by the API routes ---------- */
