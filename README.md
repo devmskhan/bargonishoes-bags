@@ -96,8 +96,17 @@ actual piece the customer is buying.
 ## Shop details, phones, delivery options
 
 All in the `SHOP` object at the top of `src/lib/shop.ts` — address, opening
-hours, both phone numbers, the WhatsApp number that receives enquiries, and how
-the customer can receive the piece:
+hours, both phone numbers, the WhatsApp number that receives enquiries, the
+Facebook link, and how the customer can receive the piece.
+
+`09017603030` is the main line and the number WhatsApp enquiries go to.
+
+`email` and `instagram` are deliberately empty. Fill them in and they appear in
+the footer and the contact panel by themselves; leave them empty and the site
+simply omits them. Do not put a placeholder there — whatever is set is
+published.
+
+Delivery options:
 
 ```ts
 delivery: [
@@ -122,12 +131,21 @@ id if you want the area field to disappear for collections.
 
 A custom domain is added from the same project settings.
 
-## Adding bags
+## Adding bags and women's shoes
 
 There are no bags on the site yet because there are no photographs of them. Add
 entries with `category: "bags"` and `sizes: []` to `PRODUCTS` — the Bags filter
 and the Shoes/Bags navigation appear on their own as soon as one exists, and
 disappear again if you remove them all.
+
+Women's shoes need no new category — add them with `category: "shoes"` and the
+right size run (EU 36–41 rather than 40–45). Add the house to `BRANDS` first if
+it is not already listed.
+
+Photographs must be ones you are entitled to use: your own shots of your own
+stock, or images your supplier has given you permission to publish. Do not take
+product photography from a brand's website — it is their copyright, and it
+shows their piece rather than the one you are selling.
 
 ## If you later want to show prices and take payment
 

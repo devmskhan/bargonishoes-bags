@@ -39,9 +39,29 @@ export default function Footer() {
                   WhatsApp
                 </a>
               </li>
-              <li>
-                <a href={`mailto:${SHOP.email}`}>{SHOP.email}</a>
-              </li>
+              {SHOP.facebook ? (
+                <li>
+                  <a href={SHOP.facebook} target="_blank" rel="noopener noreferrer">
+                    Facebook
+                  </a>
+                </li>
+              ) : null}
+              {SHOP.instagram ? (
+                <li>
+                  <a
+                    href={`https://instagram.com/${SHOP.instagram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    @{SHOP.instagram}
+                  </a>
+                </li>
+              ) : null}
+              {SHOP.email ? (
+                <li>
+                  <a href={`mailto:${SHOP.email}`}>{SHOP.email}</a>
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>

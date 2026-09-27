@@ -11,11 +11,17 @@ export const SHOP = {
 
   /* WhatsApp number that receives enquiries.
      International format, digits only: drop the leading 0, put 234 in front. */
-  whatsapp: "2348038861395",
+  whatsapp: "2349017603030",
 
-  phones: ["08038861395", "09017603030"],
-  email: "bargonishoesandbags@gmail.com",
-  instagram: "bargonishoesandbags",
+  /* First one is the main line shown as the official contact. */
+  phones: ["09017603030", "08038861395"],
+
+  facebook: "https://www.facebook.com/share/p/1Dk7JQSMuN/",
+
+  /* Leave these empty until you have the real ones — anything set here
+     is published on the site. Empty means the site simply omits it. */
+  email: "" as string,
+  instagram: "" as string,
 
   address: {
     street: "Zoo Road, near Kano Zoological Garden Main Gate",

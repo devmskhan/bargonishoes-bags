@@ -150,12 +150,24 @@ export default function HomePage() {
                   ))}
                 </span>
               </li>
-              <li>
-                <span className="k">Email</span>
-                <span className="v">
-                  <a href={`mailto:${SHOP.email}`}>{SHOP.email}</a>
-                </span>
-              </li>
+              {SHOP.facebook ? (
+                <li>
+                  <span className="k">Facebook</span>
+                  <span className="v">
+                    <a href={SHOP.facebook} target="_blank" rel="noopener noreferrer">
+                      Bargoni Shoes and Bags
+                    </a>
+                  </span>
+                </li>
+              ) : null}
+              {SHOP.email ? (
+                <li>
+                  <span className="k">Email</span>
+                  <span className="v">
+                    <a href={`mailto:${SHOP.email}`}>{SHOP.email}</a>
+                  </span>
+                </li>
+              ) : null}
             </ul>
             <div style={{ marginTop: 26 }}>
               <a

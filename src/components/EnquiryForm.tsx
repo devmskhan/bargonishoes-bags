@@ -133,7 +133,8 @@ export default function EnquiryForm({
 
           <p className="note">
             If WhatsApp does not open, copy the request above and send it to{" "}
-            {SHOP.phones.join(" or ")}, or email {SHOP.email}.
+            {SHOP.phones.join(" or ")}
+            {SHOP.email ? `, or email ${SHOP.email}` : ""}.
           </p>
 
           <Link href="/shop" className="back-link">
