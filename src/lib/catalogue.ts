@@ -23,14 +23,28 @@ export type StoredProduct = Product & {
 
 const FILE = "catalogue.json";
 
-/* Pasting the token with the surrounding quotes from a .env snippet is an
-   easy mistake, so strip them rather than failing on it. The cleaned value
-   is passed to the SDK explicitly instead of letting it read the raw env. */
+const clean = (v: string | undefined) =>
+  (v ?? "").trim().replace(/^["']|["']$/g, "").trim();
+
+/* Vercel injects BLOB_READ_WRITE_TOKEN when a Blob store is connected, but a
+   store connected under its own name arrives as <STORE>_READ_WRITE_TOKEN
+   instead. Accept either, and strip the quotes people carry over from the
+   .env form of the line. */
+export function blobTokenSource(): { name: string; token: string } {
+  const direct = clean(process.env.BLOB_READ_WRITE_TOKEN);
+  if (direct) return { name: "BLOB_READ_WRITE_TOKEN", token: direct };
+
+  for (const [name, value] of Object.entries(process.env)) {
+    if (!name.endsWith("_READ_WRITE_TOKEN")) continue;
+    const token = clean(value);
+    if (token.startsWith("vercel_blob_rw_")) return { name, token };
+  }
+
+  return { name: "", token: "" };
+}
+
 export function blobToken(): string {
-  return (process.env.BLOB_READ_WRITE_TOKEN ?? "")
-    .trim()
-    .replace(/^["']|["']$/g, "")
-    .trim();
+  return blobTokenSource().token;
 }
 
 export const blobConfigured = () => blobToken().length > 0;

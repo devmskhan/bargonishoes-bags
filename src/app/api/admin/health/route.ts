@@ -1,5 +1,10 @@
 import { isAdmin, denied, adminEmail, signedInEmail } from "@/lib/admin";
-import { blobConfigured, blobToken, getCatalogue } from "@/lib/catalogue";
+import {
+  blobConfigured,
+  blobToken,
+  blobTokenSource,
+  getCatalogue
+} from "@/lib/catalogue";
 
 export const dynamic = "force-dynamic";
 
@@ -9,13 +14,21 @@ export async function GET() {
   if (!(await isAdmin())) return denied();
 
   const raw = process.env.BLOB_READ_WRITE_TOKEN ?? "";
-  const clean = blobToken();
+  const found = blobTokenSource();
+  const token = found.token;
+
+  /* Names only — never values. Helps when the store arrived under its own name. */
+  const tokenLikeNames = Object.keys(process.env).filter(
+    (n) => n.includes("BLOB") || n.endsWith("_READ_WRITE_TOKEN")
+  );
 
   let storage: Record<string, unknown> = {
-    tokenVisible: clean.length > 0,
-    tokenLength: clean.length,
-    looksLikeAVercelBlobToken: clean.startsWith("vercel_blob_rw_"),
-    hadStrayQuotes: raw.trim() !== clean
+    tokenVisible: token.length > 0,
+    tokenLength: token.length,
+    foundInVariable: found.name || "none",
+    looksLikeAVercelBlobToken: token.startsWith("vercel_blob_rw_"),
+    hadStrayQuotes: raw.trim() !== raw.trim().replace(/^["']|["']$/g, ""),
+    blobRelatedVariableNamesPresent: tokenLikeNames
   };
 
   if (blobConfigured()) {
