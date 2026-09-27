@@ -639,6 +639,43 @@ body.is-locked .header { backdrop-filter: none; }
   }
 }
 
+/* ---------- store film ---------- */
+
+.film {
+  display: grid;
+  grid-template-columns: minmax(250px, 340px) 1fr;
+  gap: clamp(28px, 5vw, 66px);
+  align-items: center;
+}
+
+.film-frame {
+  position: relative;
+  border: 1px solid var(--line-warm);
+  background: #000;
+  overflow: hidden;
+  box-shadow: 0 30px 70px -42px rgba(0, 0, 0, .95);
+}
+
+.film-frame video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+  background: #000;
+}
+
+.film-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.film-copy h2 { font-size: clamp(28px, 4vw, 44px); }
+.film-copy p { color: var(--muted); max-width: 52ch; }
+.film-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .film { grid-template-columns: 1fr; justify-items: center; }
+  .film-frame { max-width: 320px; }
+  .film-copy { align-items: flex-start; }
+}
+
 /* ---------- editorial / contact ---------- */
 
 .duo {

@@ -128,6 +128,51 @@ export default function HomePage() {
         </div>
       </div>
 
+      <section className="section wrap">
+        <div className="film">
+          <div className="film-frame">
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              poster="/video/store-poster.jpg"
+            >
+              <source src="/video/bargoni-store.mp4" type="video/mp4" />
+              Your browser cannot play this video. Come and see the shop in
+              person at {SHOP.address.street}.
+            </video>
+          </div>
+
+          <div className="film-copy">
+            <span className="eyebrow">Inside the store</span>
+            <h2>Eighty seconds on the shop floor.</h2>
+            <p>
+              Wall to wall, floor to ceiling. This is the same stock you are
+              looking at on this site — the shelves, the boxes, the counter,
+              filmed on an ordinary working day.
+            </p>
+            <p>
+              We do not list prices online because they move. What does not
+              move is the shop: it is there, on Zoo Road, and so is everything
+              in it.
+            </p>
+            <div className="film-actions">
+              <Link href="/shop" className="btn btn-gold">
+                View the collection
+              </Link>
+              <a
+                href={waLink(`Hello ${SHOP.name}, I saw the shop video on your site.`)}
+                className="btn btn-line"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ask on WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section wrap" id="visit">
         <div className="duo">
           <div className="prose">

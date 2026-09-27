@@ -77,6 +77,29 @@ To stop selling something, delete its block.
 To add a house to the filter row, add its name to `BRANDS` at the top of the
 same file.
 
+## The store video
+
+`public/video/bargoni-store.mp4` is the walkthrough of the shop, shown in the
+"Inside the store" section on the home page. It is compressed from the original
+27 MB down to 5.8 MB, with `public/video/store-poster.jpg` as the still that
+shows before anyone presses play.
+
+It does **not** autoplay. A visitor on mobile data chooses whether to spend it,
+and the poster frame carries the shop on its own. To replace the video, export
+at 540×960 or smaller and keep it under about 6 MB:
+
+```bash
+ffmpeg -i new-video.mp4 -vf "scale=540:960" -c:v libx264 -crf 30 \
+  -movflags +faststart -c:a aac -b:a 64k -ac 1 public/video/bargoni-store.mp4
+```
+
+Then grab a new poster from a frame you like:
+
+```bash
+ffmpeg -ss 36 -i public/video/bargoni-store.mp4 -frames:v 1 \
+  public/video/store-poster.jpg
+```
+
 ## Product photos
 
 Eighteen pairs are in with photographs. To add more:
