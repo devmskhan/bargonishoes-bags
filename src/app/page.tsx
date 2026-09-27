@@ -1,24 +1,25 @@
 import Link from "next/link";
-import { BRANDS, PRODUCTS, SHOP, fullAddress, waLink } from "@/lib/shop";
+import { PRODUCTS, SHOP, activeBrands, fullAddress, waLink } from "@/lib/shop";
 import ProductCard from "@/components/ProductCard";
 
 export default function HomePage() {
   const featured = PRODUCTS.slice(0, 8);
+  const houses = activeBrands();
 
   return (
     <>
       <section className="hero">
         <div className="wrap hero-inner">
           <div>
-            <span className="eyebrow">Gucci · Ferragamo · Hermès · and more</span>
+            <span className="eyebrow">Hermès · Dior · Louis Vuitton · and more</span>
             <h1>
               Designer shoes and bags,{" "}
               <span className="gold-text">made from the best materials</span>.
             </h1>
             <p className="lede">
               We stock the houses people actually ask for, and we check every
-              piece by hand before it reaches the shelf. Choose yours here,
-              collect it on Zoo Road or have it delivered anywhere in Nigeria.
+              piece by hand before it reaches the shelf. Put what you like on a
+              list, and we come back with the price and your size.
             </p>
             <div className="hero-cta">
               <Link href="/shop" className="btn btn-gold">
@@ -43,7 +44,7 @@ export default function HomePage() {
 
       <div className="houses">
         <div className="wrap houses-inner">
-          {BRANDS.map((b) => (
+          {houses.map((b) => (
             <Link key={b} href={`/shop?b=${encodeURIComponent(b)}`} className="house">
               {b}
             </Link>
@@ -88,16 +89,17 @@ export default function HomePage() {
             <span className="assure-num">02</span>
             <h3>Try before you commit</h3>
             <p>
-              Come to the store and try the size. If you order online in Kano
-              and the fit is wrong, we exchange it within seven days, unworn.
+              Come to the store and try the size. If you buy online in Kano and
+              the fit is wrong, we exchange it within seven days, unworn.
             </p>
           </div>
           <div className="assure-item">
             <span className="assure-num">03</span>
             <h3>A person, not a form</h3>
             <p>
-              Your order reaches us on WhatsApp and we reply to confirm the
-              piece, the price and the delivery before any money moves.
+              Your list reaches us on WhatsApp and we reply with the price of
+              each piece and what is on the shelf in your size. Nothing is
+              committed until we have spoken.
             </p>
           </div>
         </div>

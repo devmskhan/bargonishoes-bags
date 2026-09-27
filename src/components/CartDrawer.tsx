@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { money } from "@/lib/shop";
 import { useCart, lineKey, productOf } from "./CartProvider";
 import ProductMedia from "./ProductMedia";
 
 export default function CartDrawer() {
-  const { open, setOpen, lines, subtotal, setQty, remove, toast } = useCart();
+  const { open, setOpen, lines, count, setQty, remove, toast } = useCart();
 
   useEffect(() => {
     if (!open) return;
@@ -25,9 +24,9 @@ export default function CartDrawer() {
       {open ? (
         <>
           <div className="scrim" onClick={() => setOpen(false)} />
-          <aside className="drawer" role="dialog" aria-modal="true" aria-label="Your selection">
+          <aside className="drawer" role="dialog" aria-modal="true" aria-label="Your list">
             <div className="drawer-head">
-              <h2>Your selection</h2>
+              <h2>Your list</h2>
               <button className="x" onClick={() => setOpen(false)} aria-label="Close">
                 &times;
               </button>
@@ -36,7 +35,7 @@ export default function CartDrawer() {
             <div className="drawer-body">
               {lines.length === 0 ? (
                 <p className="note" style={{ fontSize: 15 }}>
-                  Nothing selected yet. Browse the collection and add a piece.
+                  Nothing on the list yet. Browse the collection and add a piece.
                 </p>
               ) : (
                 lines.map((l) => {
@@ -66,7 +65,6 @@ export default function CartDrawer() {
                         </div>
                       </div>
                       <div>
-                        <div className="line-cost num">{money(p.price * l.qty)}</div>
                         <button className="drop" onClick={() => remove(key)}>
                           Remove
                         </button>
@@ -80,22 +78,16 @@ export default function CartDrawer() {
             <div className="drawer-foot">
               {lines.length > 0 ? (
                 <>
-                  <div className="totals">
-                    <div>
-                      <span>Subtotal</span>
-                      <span className="num">{money(subtotal)}</span>
-                    </div>
-                    <div>
-                      <span>Delivery</span>
-                      <span>Chosen at checkout</span>
-                    </div>
-                  </div>
+                  <p className="note">
+                    {count === 1 ? "1 piece" : `${count} pieces`} on the list. We
+                    reply with prices and confirm what is in your size.
+                  </p>
                   <Link
-                    href="/checkout"
+                    href="/enquire"
                     className="btn btn-gold btn-block"
                     onClick={() => setOpen(false)}
                   >
-                    Proceed to checkout
+                    Request prices
                   </Link>
                 </>
               ) : null}

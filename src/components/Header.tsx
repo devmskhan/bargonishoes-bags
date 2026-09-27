@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { SHOP } from "@/lib/shop";
+import { SHOP, activeCategories, categoryLabel } from "@/lib/shop";
 import { useCart } from "./CartProvider";
 
 export default function Header({ clerkEnabled }: { clerkEnabled: boolean }) {
   const { count, setOpen } = useCart();
+  const categories = activeCategories();
 
   return (
     <header className="header">
@@ -22,8 +23,13 @@ export default function Header({ clerkEnabled }: { clerkEnabled: boolean }) {
 
         <nav className="nav" aria-label="Main">
           <Link href="/shop">Collection</Link>
-          <Link href="/shop?c=shoes">Shoes</Link>
-          <Link href="/shop?c=bags">Bags</Link>
+          {categories.length > 1
+            ? categories.map((c) => (
+                <Link key={c} href={`/shop?c=${c}`}>
+                  {categoryLabel(c)}
+                </Link>
+              ))
+            : null}
           <Link href="/#visit">Visit</Link>
         </nav>
 
@@ -47,9 +53,9 @@ export default function Header({ clerkEnabled }: { clerkEnabled: boolean }) {
           <button
             className="cart-open"
             onClick={() => setOpen(true)}
-            aria-label={count === 1 ? "Selection, 1 item" : `Selection, ${count} items`}
+            aria-label={count === 1 ? "List, 1 item" : `List, ${count} items`}
           >
-            Bag
+            List
             <span className="cart-pip num">{count}</span>
           </button>
         </div>

@@ -20,7 +20,6 @@ export type CartLine = {
 type CartState = {
   lines: CartLine[];
   count: number;
-  subtotal: number;
   open: boolean;
   ready: boolean;
   add: (slug: string, size: string, color: string) => void;
@@ -31,7 +30,7 @@ type CartState = {
   toast: string | null;
 };
 
-const STORE_KEY = "bargoni.cart.v2";
+const STORE_KEY = "bargoni.enquiry.v1";
 const CartContext = createContext<CartState | null>(null);
 
 export const lineKey = (l: CartLine) => `${l.slug}|${l.size}|${l.color}`;
@@ -55,7 +54,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
       }
     } catch {
-      /* private window or storage blocked — the cart still works for this visit */
+      /* private window or storage blocked — the list still works for this visit */
     }
     setReady(true);
   }, []);
@@ -116,14 +115,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<CartState>(() => {
     const count = lines.reduce((n, l) => n + l.qty, 0);
-    const subtotal = lines.reduce((n, l) => {
-      const p = productOf(l.slug);
-      return p ? n + p.price * l.qty : n;
-    }, 0);
     return {
       lines,
       count,
-      subtotal,
       open,
       ready,
       add,

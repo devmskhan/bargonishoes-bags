@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import CheckoutForm from "@/components/CheckoutForm";
+import EnquiryForm from "@/components/EnquiryForm";
 
 export const metadata: Metadata = {
-  title: "Checkout",
-  description: "Place your order with Bargoni Shoes and Bags, Zoo Road, Kano."
+  title: "Enquire",
+  description:
+    "Ask Bargoni Shoes and Bags, Zoo Road Kano, for prices and availability."
 };
 
 export const dynamic = "force-dynamic";
 
-export default async function CheckoutPage() {
+export default async function EnquirePage() {
   let defaultName = "";
   let defaultEmail = "";
 
@@ -26,5 +27,5 @@ export default async function CheckoutPage() {
     }
   }
 
-  return <CheckoutForm defaultName={defaultName} defaultEmail={defaultEmail} />;
+  return <EnquiryForm defaultName={defaultName} defaultEmail={defaultEmail} />;
 }

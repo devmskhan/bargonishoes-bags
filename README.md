@@ -1,9 +1,13 @@
 # Bargoni Shoes and Bags
 
 The shop website for Bargoni, Zoo Road, Kano. Customers browse the collection,
-pick a size and colour, add pieces to a bag and place an order. The finished
-order arrives on WhatsApp as one formatted message with the items, sizes,
-delivery address and a reference number.
+pick a size and colour, build a list and request prices. The request arrives on
+WhatsApp as one formatted message with the pieces, sizes, colours and a
+reference number.
+
+**Prices are deliberately not shown on the site.** Stock and prices move, so
+the site's job is to show what is on the shelf and get the customer talking to
+you.
 
 Built with **Next.js 15** (App Router, TypeScript) and **Clerk** for customer
 accounts.
@@ -55,19 +59,16 @@ change the values, save.
 
 ```ts
 {
-  slug: "gucci-horsebit-loafer",   // unique, lowercase, dashes — becomes the URL
-  name: "Horsebit Loafer",
-  brand: "Gucci",                  // must match a name in BRANDS
+  slug: "hermes-izmir-black",      // unique, lowercase, dashes — becomes the URL
+  name: "Izmir Slide — Black",
+  brand: "Hermès",                  // must match a name in BRANDS
   category: "shoes",               // "shoes" or "bags"
-  price: 690000,                   // number only, no commas or ₦
-  was: 750000,                     // optional, shows a struck-through old price
-  condition: "New",                // or "Pre-owned · excellent" / "· good"
-  blurb: "Polished leather, signature horsebit hardware",
+  blurb: "H-cutout band, calfskin, flat sole",
   detail: "The longer description on the product page.",
   sizes: [40, 41, 42, 43, 44],     // [] for bags
-  colors: ["Black", "Brown"],
-  image: "/products/horsebit.jpg", // optional — see below
-  tag: "In stock now"              // optional badge
+  colors: ["Black"],
+  image: "/products/hermes-izmir-black.jpg",  // optional — see below
+  tag: "Statement piece"           // optional badge
 }
 ```
 
@@ -78,8 +79,7 @@ same file.
 
 ## Product photos
 
-This is the main thing still outstanding. Right now each piece shows a gold
-lettered plate instead of a photo.
+Eighteen pairs are in with photographs. To add more:
 
 1. Put the photo in `public/products/`, for example
    `public/products/horsebit-loafer.jpg`
@@ -93,21 +93,22 @@ Photograph your own stock. Do not copy images from Gucci, Hermès or any other
 brand's website: those are their copyright, and the photo would not show the
 actual piece the customer is buying.
 
-## Shop details, phones, delivery fees
+## Shop details, phones, delivery options
 
 All in the `SHOP` object at the top of `src/lib/shop.ts` — address, opening
-hours, both phone numbers, the WhatsApp number that receives orders, and the
-delivery options with their fees:
+hours, both phone numbers, the WhatsApp number that receives enquiries, and how
+the customer can receive the piece:
 
 ```ts
 delivery: [
-  { id: "pickup",  label: "Collect from the store",        fee: 0 },
-  { id: "kano",    label: "Delivery within Kano",          fee: 2500 },
-  { id: "nigeria", label: "Delivery elsewhere in Nigeria",  fee: 6500 }
+  { id: "pickup",  label: "Collect from the store" },
+  { id: "kano",    label: "Delivery within Kano" },
+  { id: "nigeria", label: "Delivery elsewhere in Nigeria" }
 ]
 ```
 
-Keep the `pickup` id if you want the address field to disappear for collections.
+No fees are shown — delivery is agreed along with the price. Keep the `pickup`
+id if you want the area field to disappear for collections.
 
 ## Putting it online
 
@@ -121,19 +122,27 @@ Keep the `pickup` id if you want the address field to disappear for collections.
 
 A custom domain is added from the same project settings.
 
-## Taking card payments
+## Adding bags
 
-Orders currently settle by transfer, cash or POS once you have confirmed on
-WhatsApp. Cards need a **Paystack** or **Flutterwave** merchant account. Once
-you have one, the `place()` function in `src/components/CheckoutForm.tsx` is the
-only place that changes — it builds the WhatsApp message today and would open
-the provider's checkout with the same total instead.
+There are no bags on the site yet because there are no photographs of them. Add
+entries with `category: "bags"` and `sizes: []` to `PRODUCTS` — the Bags filter
+and the Shoes/Bags navigation appear on their own as soon as one exists, and
+disappear again if you remove them all.
+
+## If you later want to show prices and take payment
+
+Add a `price` field back to the products and show it on the card and product
+page, then wire the request button to **Paystack** or **Flutterwave** — that
+needs a merchant account. The `submit()` function in
+`src/components/EnquiryForm.tsx` is the one place that changes.
 
 ## Notes
 
 - The bag is kept in the visitor's own browser, so it survives a refresh. It is
   not sent anywhere until the order button is pressed.
 - The site is a single deliberate dark theme, built around the gold house mark.
-- Prices live in the code rather than a database. That is intentional at this
+- Stock lives in the code rather than a database. That is intentional at this
   size: one file to edit and nothing to break. A real stock system with live
   quantities would need a database — worth doing once the range grows.
+- Product names describe what each piece actually is. Correct any that do not
+  match how you sell them.

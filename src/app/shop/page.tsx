@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { BRANDS, type Category } from "@/lib/shop";
+import { activeBrands, type Category } from "@/lib/shop";
 import ShopBrowser from "@/components/ShopBrowser";
 
 export const metadata: Metadata = {
   title: "Collection",
   description:
-    "Designer shoes and bags in stock at Bargoni, Zoo Road, Kano — Gucci, Ferragamo, Hermès, Prada and more."
+    "Designer shoes and bags in stock at Bargoni, Zoo Road, Kano — Hermès, Dior, Louis Vuitton, Loro Piana, Saint Laurent and more."
 };
 
 export default async function ShopPage({
@@ -18,8 +18,7 @@ export default async function ShopPage({
   const category: Category | "all" =
     sp.c === "shoes" || sp.c === "bags" ? sp.c : "all";
 
-  const brand =
-    sp.b && (BRANDS as readonly string[]).includes(sp.b) ? sp.b : "all";
+  const brand = sp.b && activeBrands().includes(sp.b) ? sp.b : "all";
 
   return (
     <section className="section wrap">
@@ -28,8 +27,8 @@ export default async function ShopPage({
           <span className="eyebrow">In store now</span>
           <h2>The collection</h2>
           <p className="sub">
-            What is on the floor at Zoo Road today. Prices are in naira and
-            include the piece as photographed. Message us to hold a size.
+            What is on the floor at Zoo Road today. Prices are not listed —
+            add what you like to your list and we send them straight back.
           </p>
         </div>
       </div>

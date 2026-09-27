@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PRODUCTS, SHOP, getProduct, money, waLink } from "@/lib/shop";
+import { PRODUCTS, SHOP, getProduct, categoryLabel, waLink } from "@/lib/shop";
 import ProductMedia from "@/components/ProductMedia";
 import AddToBag from "@/components/AddToBag";
 
@@ -19,9 +19,7 @@ export async function generateMetadata({
   if (!product) return { title: "Not found" };
   return {
     title: `${product.brand} ${product.name}`,
-    description: `${product.brand} ${product.name} — ${product.blurb}. ${money(
-      product.price
-    )} at Bargoni, Zoo Road, Kano.`
+    description: `${product.brand} ${product.name} — ${product.blurb}. In store at Bargoni, Zoo Road, Kano.`
   };
 }
 
@@ -35,9 +33,7 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const enquiry = waLink(
-    `Hello ${SHOP.name}, I am interested in the ${product.brand} ${product.name} (${money(
-      product.price
-    )}). Is it still available?`
+    `Hello ${SHOP.name}, please send me the price for the ${product.brand} ${product.name}. Is it available?`
   );
 
   return (
@@ -45,7 +41,6 @@ export default async function ProductPage({
       <div className="pdp">
         <div className="pdp-media">
           {product.tag ? <span className="badge">{product.tag}</span> : null}
-          <span className="cond">{product.condition}</span>
           <ProductMedia product={product} priority />
         </div>
 
@@ -55,14 +50,11 @@ export default async function ProductPage({
             <h1 style={{ marginTop: 10 }}>{product.name}</h1>
           </div>
 
-          <div className="pdp-price">
-            <span className="price num">{money(product.price)}</span>
-            {product.was ? (
-              <span className="price-was num">{money(product.was)}</span>
-            ) : null}
-          </div>
-
           <p className="pdp-detail">{product.detail}</p>
+
+          <p className="price-ask">
+            Price on request — we confirm it with you before anything is agreed.
+          </p>
 
           <AddToBag product={product} />
 
@@ -81,19 +73,19 @@ export default async function ProductPage({
               <span className="v">{product.brand}</span>
             </li>
             <li>
-              <span className="k">Condition</span>
-              <span className="v">{product.condition}</span>
-            </li>
-            <li>
               <span className="k">Type</span>
-              <span className="v">
-                {product.category === "shoes" ? "Footwear" : "Bag"}
-              </span>
+              <span className="v">{categoryLabel(product.category)}</span>
             </li>
             {product.sizes.length > 0 ? (
               <li>
                 <span className="k">Sizes here</span>
-                <span className="v num">{product.sizes.join(", ")}</span>
+                <span className="v num">EU {product.sizes.join(", ")}</span>
+              </li>
+            ) : null}
+            {product.colors.length > 0 ? (
+              <li>
+                <span className="k">Colours</span>
+                <span className="v">{product.colors.join(", ")}</span>
               </li>
             ) : null}
             <li>

@@ -1,7 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BRANDS, PRODUCTS, type Category } from "@/lib/shop";
+import {
+  PRODUCTS,
+  activeBrands,
+  activeCategories,
+  categoryLabel,
+  type Category
+} from "@/lib/shop";
 import ProductCard from "./ProductCard";
 
 type CategoryFilter = Category | "all";
@@ -16,6 +22,10 @@ export default function ShopBrowser({
   const [category, setCategory] = useState<CategoryFilter>(initialCategory);
   const [brand, setBrand] = useState<string>(initialBrand);
 
+  /* only show filters that have stock behind them */
+  const categories = useMemo(activeCategories, []);
+  const brands = useMemo(activeBrands, []);
+
   const items = useMemo(
     () =>
       PRODUCTS.filter(
@@ -28,24 +38,27 @@ export default function ShopBrowser({
 
   return (
     <>
-      <div className="filters" role="group" aria-label="Filter by type">
-        {(
-          [
-            ["all", "Everything"],
-            ["shoes", "Shoes"],
-            ["bags", "Bags"]
-          ] as [CategoryFilter, string][]
-        ).map(([value, label]) => (
+      {categories.length > 1 ? (
+        <div className="filters" role="group" aria-label="Filter by type">
           <button
-            key={value}
             className="filter"
-            aria-pressed={category === value}
-            onClick={() => setCategory(value)}
+            aria-pressed={category === "all"}
+            onClick={() => setCategory("all")}
           >
-            {label}
+            Everything
           </button>
-        ))}
-      </div>
+          {categories.map((c) => (
+            <button
+              key={c}
+              className="filter"
+              aria-pressed={category === c}
+              onClick={() => setCategory(c)}
+            >
+              {categoryLabel(c)}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       <div className="filters" role="group" aria-label="Filter by house">
         <button
@@ -55,7 +68,7 @@ export default function ShopBrowser({
         >
           All houses
         </button>
-        {BRANDS.map((b) => (
+        {brands.map((b) => (
           <button
             key={b}
             className="filter"

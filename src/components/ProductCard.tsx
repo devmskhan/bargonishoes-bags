@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { money, type Product } from "@/lib/shop";
+import type { Product } from "@/lib/shop";
 import ProductMedia from "./ProductMedia";
 
 export default function ProductCard({
@@ -13,7 +13,6 @@ export default function ProductCard({
     <Link href={`/product/${product.slug}`} className="pcard">
       <div className="pcard-media">
         {product.tag ? <span className="badge">{product.tag}</span> : null}
-        <span className="cond">{product.condition}</span>
         <ProductMedia product={product} priority={priority} />
       </div>
       <div className="pcard-body">
@@ -21,9 +20,11 @@ export default function ProductCard({
         <h3 className="pcard-name">{product.name}</h3>
         <p className="pcard-blurb">{product.blurb}</p>
         <div className="pcard-foot">
-          <span className="price num">{money(product.price)}</span>
-          {product.was ? (
-            <span className="price-was num">{money(product.was)}</span>
+          <span className="ask">View &amp; enquire</span>
+          {product.sizes.length > 0 ? (
+            <span className="sizes num">
+              EU {product.sizes[0]}–{product.sizes[product.sizes.length - 1]}
+            </span>
           ) : null}
         </div>
       </div>
