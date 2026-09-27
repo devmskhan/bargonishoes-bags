@@ -21,8 +21,8 @@
   --gold-deep:  #9A6F1C;
   --gold-veil:  rgba(201, 150, 47, 0.12);
 
-  --display: var(--font-display), "Didot", "Bodoni MT", Georgia, serif;
-  --body: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display: "Bodoni Moda", "Didot", "Bodoni MT", Georgia, serif;
+  --body: "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --gutter: clamp(18px, 5vw, 64px);
   --maxw: 1240px;

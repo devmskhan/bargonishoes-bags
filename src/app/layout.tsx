@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Jost } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { CartProvider } from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
@@ -10,26 +9,12 @@ import { getVisibleCatalogue } from "@/lib/catalogue";
 import { isAdmin } from "@/lib/admin";
 import "./globals.css";
 
-const display = Bodoni_Moda({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-display",
-  display: "swap"
-});
-
-const body = Jost({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-body",
-  display: "swap"
-});
-
 export const metadata: Metadata = {
   title: {
     default: `${SHOP.legalName} — Kano`,
     template: `%s — ${SHOP.name}`
   },
-  description: `Designer shoes and bags in Kano. Gucci, Ferragamo, Hermès and more, made from the best materials. ${fullAddress()}.`,
+  description: `Designer shoes and bags in Kano. Hermès, Dior, Gucci, Prada, Louis Vuitton and more, made from the best materials. ${fullAddress()}.`,
   icons: { icon: "/icon.png", apple: "/apple-icon.png" },
   openGraph: {
     title: `${SHOP.legalName} — Kano`,
@@ -53,7 +38,22 @@ export default async function RootLayout({
   const admin = await isAdmin();
 
   const shell = (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        {/* Loaded as a plain stylesheet rather than through next/font: the
+            Google loader fails at build time on Bodoni Moda's optical-size
+            axis, and a broken build is worse than a font request. */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=Jost:wght@300;400;500;600&display=swap"
+        />
+      </head>
       <body>
         <CartProvider products={products}>
           <Header
